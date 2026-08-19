@@ -3,10 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const { pathname } = useLocation();
-
   const isHome = useMemo(() => pathname === '/', [pathname]);
-
-  console.log(isHome);
 
   return (
     <header className={isHome ? 'bg-[url(/bg.jpg)] bg-center bg-cover' : 'bg-slate-800'}>

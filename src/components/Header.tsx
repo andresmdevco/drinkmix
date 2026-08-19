@@ -6,11 +6,14 @@ export default function Header() {
   const { pathname } = useLocation();
   const isHome = useMemo(() => pathname === '/', [pathname]);
 
-  const fetchCategories = useAppStore((state) => state.fetchCategories)
+  const fetchCategories = useAppStore((state) => state.fetchCategories);
+  const categories = useAppStore((state) => state.categories);
+
+  console.log(categories);
 
   useEffect(() => {
-     fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   return (
     <header className={isHome ? 'bg-[url(/bg.jpg)] bg-center bg-cover' : 'bg-slate-800'}>

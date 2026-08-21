@@ -36,7 +36,6 @@ export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
       selectedRecipe,
       modal: true,
     });
-    console.log(selectedRecipe);
   },
   closeModal: () => {
     set({

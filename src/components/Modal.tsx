@@ -82,7 +82,7 @@ export default function Modal() {
                   <div className="mt-5 flex justify-between gap-4">
                     <button
                       type="button"
-                      className="cursor-pointer w-full rounded bg-gray-600 p-3 font-bold uppercase text-white shadow hover:bg-gray-500"
+                      className="cursor-pointer w-full rounded bg-[#e8cccc] hover:bg-[#dfb8b8] text-red-950 p-3 font-bold uppercase transition-colors"
                       onClick={closeModal}
                     >
                       Cerrar
@@ -90,7 +90,7 @@ export default function Modal() {
 
                     <button
                       type="button"
-                      className="cursor-pointer w-full rounded bg-orange-600 p-3 font-bold uppercase text-white shadow hover:bg-orange-500"
+                      className="cursor-pointer w-full rounded bg-linear-to-r from-red-800 to-amber-800 hover:from-red-900 hover:to-amber-900 p-3 font-bold uppercase text-white shadow"
                       onClick={() => handleClickFavorite(selectedRecipe)}
                     >
                       {favoriteExists(selectedRecipe.idDrink)

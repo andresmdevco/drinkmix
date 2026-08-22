@@ -6,8 +6,7 @@ type DrinkCardProps = {
 };
 
 export default function DrinkCard({ drink }: DrinkCardProps) {
-
-  const selectRecipe = useAppStore((state) => state.selectRecipe)
+  const selectRecipe = useAppStore((state) => state.selectRecipe);
 
   return (
     <div className="shadow-lg">
@@ -22,7 +21,7 @@ export default function DrinkCard({ drink }: DrinkCardProps) {
         <h2 className="text-2xl truncate font-black">{drink.strDrink}</h2>
         <button
           type="button"
-          className="cursor-pointer bg-orange-400 hover:bg-orange-500 mt-5 w-full p-3 font-bold text-white text-lg"
+          className="cursor-pointer bg-linear-to-r from-red-800 to-amber-800 hover:from-red-900 hover:to-amber-900 mt-5 w-full p-3 font-bold text-white text-lg"
           onClick={() => selectRecipe(drink.idDrink)}
         >
           Ver Receta

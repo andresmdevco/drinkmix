@@ -13,7 +13,13 @@ export async function getCategories() {
 }
 
 export async function getRecipes(filters: SearchFilter) {
-  const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filters.category}&i=${filters.ingredient}`;
+  let url: string;
+
+  if (filters.name.trim()) {
+    url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${filters.name.trim()}`;
+  } else {
+    url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filters.category}`;
+  }
   const { data } = await axios(url);
   const result = DrinksAPIResponse.safeParse(data);
 
@@ -21,6 +27,17 @@ export async function getRecipes(filters: SearchFilter) {
     return result.data;
   }
 }
+
+
+// export async function getRecipes(filters: SearchFilter) {
+//   const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filters.category}&i=${filters.name}`;
+//   const { data } = await axios(url);
+//   const result = DrinksAPIResponse.safeParse(data);
+
+//   if (result.success) {
+//     return result.data;
+//   }
+// }
 
 export async function getRecipeById(id: Drink['idDrink']) {
   const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;

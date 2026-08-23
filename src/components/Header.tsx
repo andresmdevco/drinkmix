@@ -4,7 +4,7 @@ import { useAppStore } from '../stores/useAppStore';
 
 export default function Header() {
   const [searchFilters, setSearchFilters] = useState({
-    ingredient: '',
+    name: '',
     category: '',
   });
   const { pathname } = useLocation();
@@ -19,27 +19,59 @@ export default function Header() {
     fetchCategories();
   }, [fetchCategories]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
-    setSearchFilters({
-      ...searchFilters,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+
+    setSearchFilters((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'name' && value ? { category: '' } : {}),
+      ...(name === 'category' && value ? { name: '' } : {}),
+    }));
   };
+
+  // const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
+  //   setSearchFilters({
+  //     ...searchFilters,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (Object.values(searchFilters).includes('')) {
+    if (!searchFilters.name.trim() && !searchFilters.category) {
       showNotification({
-        text: 'Todos los campos son obligatorios',
+        text: 'Debes ingresar un nombre o seleccionar una categoría',
         error: true,
       });
       return;
     }
 
-    // Consultar las recetas
     searchRecipes(searchFilters);
+
+    setSearchFilters({
+      name: '',
+      category: '',
+    });
   };
+
+  // const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   if (Object.values(searchFilters).includes('')) {
+  //     showNotification({
+  //       text: 'Todos los campos son obligatorios',
+  //       error: true,
+  //     });
+  //     return;
+  //   }
+
+  //   // Consultar las recetas
+  //   searchRecipes(searchFilters);
+  // };
 
   return (
     <header className={isHome ? 'bg-[url(/bg.jpg)] bg-center bg-cover' : 'bg-red-950'}>
@@ -76,19 +108,20 @@ export default function Header() {
           >
             <div className="space-y-4">
               <label
-                htmlFor="ingredient"
+                htmlFor="name"
                 className="block text-white uppercase font-extrabold text-lg"
               >
-                Nombre o Ingredientes
+                Nombre de la bebida
               </label>
               <input
                 type="text"
-                id="ingredient"
-                name="ingredient"
-                className="bg-white p-3 w-full rounded-lg focus:outline-none"
-                placeholder="Nombre o Ingrediente. Ej. Vodka, Tequila, Café"
+                id="name"
+                name="name"
+                disabled={!!searchFilters.category}
+                className="bg-white p-3 w-full rounded-lg focus:outline-none disabled:bg-gray-400 disabled:text-gray-600 disabled:cursor-not-allowed"
+                placeholder="Ej. Margarita, Mojito, Martini, Vodka"
                 onChange={handleChange}
-                value={searchFilters.ingredient}
+                value={searchFilters.name}
               />
             </div>
             <div className="space-y-4">
@@ -101,7 +134,8 @@ export default function Header() {
               <select
                 id="category"
                 name="category"
-                className="bg-white p-3 w-full rounded-lg focus:outline-none"
+                disabled={!!searchFilters.name.trim()}
+                className="bg-white p-3 w-full rounded-lg focus:outline-none disabled:bg-gray-400 disabled:text-gray-600 disabled:cursor-not-allowed"
                 onChange={handleChange}
                 value={searchFilters.category}
               >

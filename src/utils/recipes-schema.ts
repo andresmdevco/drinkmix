@@ -9,7 +9,7 @@ export const CategoriesAPIResponseSchema = z.object({
 });
 
 export const SearchFilterSchema = z.object({
-  ingredient: z.string(),
+  name: z.string(),
   category: z.string(),
 });
 

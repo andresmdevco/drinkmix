@@ -94,9 +94,17 @@ export default function Header() {
               className={({ isActive }) =>
                 isActive ? 'text-amber-500 uppercase font-bold' : 'text-white uppercase font-bold'
               }
-              to="/favoritos"
+              to="/favorites"
             >
               Favoritos
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? 'text-amber-500 uppercase font-bold' : 'text-white uppercase font-bold'
+              }
+              to="/generate"
+            >
+              Generar con IA
             </NavLink>
           </nav>
         </div>

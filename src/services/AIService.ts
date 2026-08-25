@@ -4,7 +4,7 @@ import { openrouter } from '../lib/ai';
 export default {
   async generateRecipe(prompt: string) {
     const result = streamText({
-      model: openrouter('google/gemma-4-31b-it:free'),
+      model: openrouter('dots-studio/dots-3-note-preview:free'),
       prompt,
     });
 

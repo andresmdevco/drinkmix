@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import { getCategories, getRecipeById, getRecipes } from '../services/RecipeService';
+import RecipeService from '../services/RecipeService';
 import type { Categories, Drink, Drinks, Recipe, SearchFilter } from '../types';
 import type { FavoritesSliceType } from './favoritesSlice';
 import type { NotificationSliceType } from './notificationSlice';
@@ -21,13 +21,13 @@ export const createRecipesSlice: StateCreator<RecipesSliceType & FavoritesSliceT
   selectedRecipe: {} as Recipe,
   modal: false,
   fetchCategories: async () => {
-    const categories = await getCategories();
+    const categories = await RecipeService.getCategories();
     set({
       categories,
     });
   },
   searchRecipes: async (filters) => {
-    const drinks = await getRecipes(filters);
+    const drinks = await RecipeService.getRecipes(filters);
     if (!drinks) {
       get().showNotification({
         text: 'Bebida no encontrada. Intenta con otro nombre.',
@@ -40,7 +40,7 @@ export const createRecipesSlice: StateCreator<RecipesSliceType & FavoritesSliceT
     });
   },
   selectRecipe: async (id) => {
-    const selectedRecipe = await getRecipeById(id);
+    const selectedRecipe = await RecipeService.getRecipeById(id);
     set({
       selectedRecipe,
       modal: true,

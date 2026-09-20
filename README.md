@@ -6,6 +6,9 @@ Aplicación web construida con **React**, **TypeScript** y **Tailwind CSS** para
 
 🔗 [https://drinkmix-andresmdevco.vercel.app/](https://drinkmix-andresmdevco.vercel.app/)
 
+## 👀 Vista previa
+https://github.com/user-attachments/assets/2d88f806-8ba8-415c-a4d6-33015383bcc0
+
 ## 🛠️ Tecnologías Utilizadas
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)

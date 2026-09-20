@@ -25,6 +25,7 @@ Además:
 - **Zod** — validación en tiempo de ejecución de las respuestas de la API de recetas
 - **Axios** — cliente HTTP para consumir la API de TheCocktailDB
 - **Vercel AI SDK** (`ai` + `@openrouter/ai-sdk-provider`) — generación de recetas con IA vía OpenRouter, con streaming de texto
+- **Vercel Functions** (Edge Runtime) — función serverless (`api/recipe.ts`) que ejecuta la llamada a OpenRouter del lado del servidor, evitando exponer la API key en el navegador
 - **Headless UI** — componentes accesibles para el modal (`Dialog`) y las transiciones (`Transition`)
 - **Heroicons** y **react-icons** — iconografía de la interfaz (notificaciones, spinner)
 
@@ -103,6 +104,7 @@ Además:
 - Capa de servicios (`services/`) separada de la capa de estado, encapsulando el acceso a las APIs externas.
 - Tipado de props, store y esquemas con TypeScript, con tipos inferidos directamente desde Zod.
 - Organización del proyecto por responsabilidades (`components`, `views`, `layouts`, `stores`, `services`, `lib`, `types`, `utils`).
+- Separación de secretos entre cliente y servidor: la API key de OpenRouter nunca llega al navegador, vive únicamente en la función serverless (`api/recipe.ts`), siguiendo el patrón backend-for-frontend (BFF) para proteger credenciales sensibles.
 
 ## 🚀 Cómo ejecutar el proyecto
 

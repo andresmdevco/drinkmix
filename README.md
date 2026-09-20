@@ -54,14 +54,14 @@ Además:
 | `views/FavoritesPage.tsx` | Vista de favoritos; muestra el grid de bebidas guardadas o un mensaje de estado vacío |
 | `views/GenereateAI.tsx` | Vista de generación con IA; envía el prompt del usuario y muestra el texto de la receta a medida que se genera (streaming) |
 | `services/RecipeService.ts` | Encapsula las llamadas a la API de TheCocktailDB (categorías, búsqueda, detalle por id) y valida cada respuesta con Zod |
-| `services/AIService.ts` | Define el prompt de sistema del bartender virtual y expone el `textStream` generado por el modelo de IA vía `streamText` |
+| `services/AIService.ts` | Hace `fetch` a `/api/recipe` y reconstruye la respuesta como un stream de texto (`AsyncIterable<string>`) para consumo en el frontend |
 | `stores/useAppStore.ts` | Store raíz de Zustand; combina los slices de recetas, favoritos, notificaciones e IA envueltos en `devtools` |
 | `stores/recipeSlice.ts` | Slice de recetas: categorías, resultados de búsqueda, receta seleccionada y estado del modal |
 | `stores/favoritesSlice.ts` | Slice de favoritos: agregar/eliminar, verificar existencia y cargar/persistir en `localStorage` |
 | `stores/notificationSlice.ts` | Slice de notificaciones: mostrar y ocultar mensajes con auto-cierre por `setTimeout` |
 | `stores/aiSlice.ts` | Slice de IA: dispara `generateRecipe` y concatena el `textStream` recibido en el estado `recipe` |
 | `lib/axios.ts` | Instancia de Axios configurada con la `baseURL` de TheCocktailDB |
-| `lib/ai.ts` | Configuración del proveedor de IA (`createOpenRouter`) usando la API key de OpenRouter |
+| `api/recipe.ts` | Función serverless (Edge) de Vercel que recibe el prompt, define el rol de bartender virtual y ejecuta `streamText` del lado del servidor usando la API key de OpenRouter |
 | `utils/recipes-schema.ts` | Esquemas de Zod (`CategoriesAPIResponseSchema`, `DrinksAPIResponse`, `RecipeAPIResponseSchema`, `SearchFilterSchema`) para validar las respuestas de la API |
 | `types/index.ts` | Tipos inferidos desde los esquemas de Zod (`Categories`, `Drinks`, `Drink`, `Recipe`, `SearchFilter`) |
 
@@ -86,7 +86,7 @@ Además:
 10. El usuario escribe un prompt (ej. Dame una receta de vodka con maracuyá para un domingo en la tarde) y envía el formulario de `GenerateAI`.
 11. Si el prompt está vacío, se muestra una notificación de error y no se continúa.
 12. Si hay texto, se dispara `generateRecipe`, que limpia la receta anterior y activa el estado `isGenerating` (muestra el spinner).
-13. `AIService.generateRecipe` envía el prompt a `streamText` junto con un prompt de sistema que define el rol de bartender y el formato de salida esperado.
+13. `AIService.generateRecipe` envía el prompt mediante `fetch` a la función serverless `/api/recipe`, que ejecuta `streamText` del lado del servidor (así la API key de OpenRouter nunca se expone al navegador) junto con un prompt de sistema que define el rol de bartender y el formato de salida esperado.
 14. La respuesta llega en partes (streaming). Cada parte que va llegando se agrega al estado `recipe`, por lo que la receta se va mostrando progresivamente en pantalla en lugar de aparecer completa de una sola vez.
 
 ## 📚 Conceptos aplicados
@@ -117,10 +117,15 @@ Además:
 ```
 3. Crear un archivo `.env` en la raíz del proyecto con tu API key de OpenRouter (necesaria para la generación de recetas con IA):
 ```bash
-   VITE_OPENROUTER_KEY=tu_api_key_aqui
+   OPENROUTER_KEY=tu_api_key_aqui
 ```
 4. Ejecutar el proyecto en modo desarrollo:
-```bash
-   npm run dev
-```
-5. Abrir [http://localhost:5173](http://localhost:5173) en el navegador
+
+   > ⚠️ La generación de recetas con IA usa una función serverless de Vercel (`api/recipe.ts`), que **no es servida por Vite**. Para probar la app completa (incluida la IA) en local, usa el CLI de Vercel en vez de `npm run dev`:
+   ```bash
+   npm i -g vercel
+   vercel dev
+   ```
+   Si solo quieres trabajar en búsqueda de bebidas/favoritos sin la parte de IA, `npm run dev` sigue funcionando normalmente.
+
+5. Abrir [http://localhost:3000](http://localhost:3000) (con `vercel dev`) o [http://localhost:5173](http://localhost:5173) (con `npm run dev`) en el navegador.
